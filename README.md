@@ -55,7 +55,7 @@ You can also run `pacman -S mingw-w64-x86_64-toolchain` to install the full buil
 
    ```sh
    export BBB_ROOTFS="<pathToRootfs>"
-   ```   
+   ```
 
    Note that you can add the commands in step 2 and step 3 to the `~/.bashrc` to set the path
    and the environment variable up permanently
@@ -104,7 +104,7 @@ Instructions for an Ubuntu host
 
    ```sh
    export BBB_ROOTFS="<pathToRootfs>"
-   ```   
+   ```
 
    Note that you can add the commands in step 2 and step 3 to the `~/.bashrc` to set the path
    and the environment variable up permanently.
@@ -130,3 +130,48 @@ Instructions for an Ubuntu host
 # <a id="rootfs"></a> Cloning the root filesystem
 
 # <a id="tcfagent"></a> Installing the TCF agent on the Beaglebone Black
+
+The [TCF agent](https://wiki.eclipse.org/TCF) allows comfortable
+Eclipse remote debugging and other features like a remote  file explorer in Eclipse.
+The following steps show how to setup the TCF agent on the Raspberry Pi and add it to the
+auto-startup applications. The steps are based
+on [this guide](https://wiki.eclipse.org/TCF/Raspberry_Pi)
+
+1. Install required packages on the BBB
+
+   ```sh
+   sudo apt-get install git uuid uuid-dev libssl-dev
+   ```
+
+2. Clone the repository and perform some preparation steps
+   ```sh
+   git clone git://git.eclipse.org/gitroot/tcf/org.eclipse.tcf.agent.git
+   cd org.eclipse.tcf.agent.git/agent
+   ```
+
+3. Build the TCF agent
+   ```sh
+   make
+   ```
+
+   and then test it by running
+
+   ```sh
+   obj/GNU/Linux/arm/Debug/agent –S
+   ```
+
+4. Finally install the agent for auto-start with the following steps. And set it up for 
+   auto-start.
+
+   ```sh
+   cd org.eclipse.tcf.agent/agent
+   make install
+   sudo make install INSTALLROOT=
+   sudo update-rc.d tcf-agent defaults
+   ```
+
+5. Restart the BBB and verify the tcf-agent is running with the following command
+
+   ```sh
+   systemctl status tcf-agent
+   ```
