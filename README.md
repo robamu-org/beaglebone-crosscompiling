@@ -133,7 +133,7 @@ Instructions for an Ubuntu host
 
 The [TCF agent](https://wiki.eclipse.org/TCF) allows comfortable
 Eclipse remote debugging and other features like a remote  file explorer in Eclipse.
-The following steps show how to setup the TCF agent on the Raspberry Pi and add it to the
+The following steps show how to setup the TCF agent on the BBB and add it to the
 auto-startup applications. The steps are based
 on [this guide](https://wiki.eclipse.org/TCF/Raspberry_Pi)
 
