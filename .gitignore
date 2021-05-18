@@ -1,0 +1,9 @@
+# CMake
+/build*
+
+# Eclipse
+.cproject
+.project
+.settings
+!**/eclipse/.cproject
+!**/eclipse/.project
