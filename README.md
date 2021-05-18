@@ -17,7 +17,8 @@ for remote debugging with Eclipse.
 # Windows
 
 There are  two options to cross-compile on Windows: Use the native tools and the Unix environment
-provided by MinGW64 or perform the Linux steps in WSL2. The following instructions show
+provided by MinGW64 or perform the Linux steps in WSL2. If you want to use WLS2, follow the Linux
+instructions (not tested yet, but should work). The following instructions show
 how to cross-compile using MinGW64. It is still recommended to clone the sysroot with Linux
 tools, using WSL2, because cloning with the MinGW64 can be problematic.
 
@@ -32,8 +33,8 @@ pacman -S mingw-w64-x86_64-cmake mingw-w64-x86_64-make rsync
 You can also run `pacman -S mingw-w64-x86_64-toolchain` to install the full build chain with
 `gcc` and `g++`
 
-1. Install the correct [ARM Linux cross-compile toolchain](https://releases.linaro.org/components/toolchain/binaries/latest-7/arm-linux-gnueabihf/).
-   provided by Linaro und unzip it somewhere. Copy the path to the `bin` folder.
+1. Install the correct [ARM Linux cross-compile toolchain](https://releases.linaro.org/components/toolchain/binaries/latest-7/arm-linux-gnueabihf/)
+   provided by Linaro and unzip it somewhere. Copy the path to the `bin` folder.
 
 2. Navigate into the toolchain folder inside MinGW64.
 
@@ -81,8 +82,8 @@ You can also run `pacman -S mingw-w64-x86_64-toolchain` to install the full buil
 
 Instructions for an Ubuntu host
 
-1. Install the correct [ARM Linux cross-compile toolchain](https://releases.linaro.org/components/toolchain/binaries/latest-7/arm-linux-gnueabihf/).
-   provided by Linaro und unzip it somewhere. Copy the path to the `bin` folder.
+1. Install the correct [ARM Linux cross-compile toolchain](https://releases.linaro.org/components/toolchain/binaries/latest-7/arm-linux-gnueabihf/)
+   provided by Linaro and unzip it somewhere. Copy the path to the `bin` folder.
 
 2. Navigate into the toolchain folder.
 
