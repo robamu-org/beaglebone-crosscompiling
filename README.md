@@ -274,3 +274,24 @@ on [this guide](https://wiki.eclipse.org/TCF/Raspberry_Pi)
    ```sh
    systemctl status tcf-agent
    ```
+
+# Using Eclipse
+
+1. Install Eclipse for C/C++ with the 
+   [installer](https://www.eclipse.org/downloads/packages/installer)
+2. Install the TCF agent plugin in Eclipse from the 
+   [releases](https://www.eclipse.org/tcf/downloads.php). Go to 
+   Help &rarr; Install New Software and use the download page, for 
+   example https://download.eclipse.org/tools/tcf/releases/1.6/1.6.2/ to search 
+   for the plugin and install it.
+3. Eclipse project files were supplied to get started. You can copy the `.cproject` and `.project`
+   files to the system root and then add the repository as an Eclipse project to get started.
+   The build system still needs to be generated from command line, but you can build the project
+   in Eclipse after that. 
+4. Set the `BBB_ROOTFS` Eclipse variable and the toolchain binary path correctly in the project
+   settings to make full use of the Eclipse indexer. After building the project, you can perform
+   remote debugging by right-clicking on the
+5. If the `tcf-agent` is running on the BBB, you should be able to connect to it using
+   the TCF plugin.
+6. If you are connected, right click on the generated image in the build tree and select
+   `Debug As` &rarr; `Remote Application` to perform remote debugging
