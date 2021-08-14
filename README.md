@@ -14,6 +14,59 @@ for remote debugging with Eclipse.
 4. Optional: `tcf-agent` running on the BBB for remote debugging with Eclipse. See the
    related [chapter](#tcfagent) for more information.
 
+# Linux
+
+The script named `bbb-env-set.sh` takes care of some of the steps specified here for convenience.
+Instructions for an Ubuntu host:
+
+1. You can download a cross-compile toolchain built with `crosstool-ng` from 
+   [here](https://www.dropbox.com/sh/gn9bo472yalknra/AABOghC1ym1CmjL8_XZSzGdma?dl=0).
+   Alternatively, you can also  download the one provided by Linaro from
+   [here](https://releases.linaro.org/components/toolchain/binaries/latest-7/arm-linux-gnueabihf/).
+   Copy the path containin the toolchain binaries, it is going to be required later.
+
+2. Navigate into the toolchain folder.
+
+   ```sh
+   cd <toolchainPath>/bin
+   pwd
+   ```
+
+   Copy the path and run the following command to add the tool binary path to the MinGW64 path
+
+   ```sh
+   export PATH=$PATH:"<copied path>"
+   ```
+
+3. It is assumed the root filesystem is located somewhere on the host machine (see [rootfs](#rootfs)
+   chapter for more information how to do this). Set in in an environmental variable which 
+   `CMake` can use
+
+   ```sh
+   export LINUX_ROOTFS="<pathToRootfs>"
+   ```
+
+   Note that you can add the commands in step 2 and step 3 to the `~/.bashrc` to set the path
+   and the environment variable up permanently.
+
+4. Build the application using CMake. Run the following commands inside the repository
+
+   ```sh
+   mkdir build && cd build
+   cmake ..
+   cmake --build . -j
+   chmod +x hello
+   ```
+
+5. Transfer to application to the Beaglebone Black and run it to test it
+
+   ```sh
+   scp hello <username>@beaglebone.local:/tmp
+   ssh <username>@beaglebone.local
+   cd /tmp
+   ./hello
+   ```
+
 # Windows
 
 There are  two options to cross-compile on Windows: Use the native tools and the Unix environment
@@ -79,58 +132,72 @@ You can also run `pacman -S mingw-w64-x86_64-toolchain` to install the full buil
    ./hello
    ```
 
-# Linux
+# <a id="tcfagent"></a> Installing the TCF agent on the Beaglebone Black
 
-The script named `bbb-env-set.sh` takes care of some of the steps specified here for convenience.
-Instructions for an Ubuntu host:
+The [TCF agent](https://wiki.eclipse.org/TCF) allows comfortable
+Eclipse remote debugging and other features like a remote  file explorer in Eclipse.
+The following steps show how to setup the TCF agent on the BBB and add it to the
+auto-startup applications. The steps are based
+on [this guide](https://wiki.eclipse.org/TCF/Raspberry_Pi)
 
-1. You can download a cross-compile toolchain built with `crosstool-ng` from 
-   [here](https://www.dropbox.com/sh/gn9bo472yalknra/AABOghC1ym1CmjL8_XZSzGdma?dl=0).
-   Alternatively, you can also  download the one provided by Linaro from
-   [here](https://releases.linaro.org/components/toolchain/binaries/latest-7/arm-linux-gnueabihf/).
-   Copy the path containin the toolchain binaries, it is going to be required later.
-
-2. Navigate into the toolchain folder.
+1. Install required packages on the BBB
 
    ```sh
-   cd <toolchainPath>/bin
-   pwd
+   sudo apt-get install git uuid uuid-dev libssl-dev
    ```
 
-   Copy the path and run the following command to add the tool binary path to the MinGW64 path
+2. Clone the repository and perform some preparation steps
+   ```sh
+   git clone git://git.eclipse.org/gitroot/tcf/org.eclipse.tcf.agent.git
+   cd org.eclipse.tcf.agent.git/agent
+   ```
+
+3. Build the TCF agent
+   ```sh
+   make
+   ```
+
+   and then test it by running
 
    ```sh
-   export PATH=$PATH:"<copied path>"
+   obj/GNU/Linux/arm/Debug/agent –S
    ```
 
-3. It is assumed the root filesystem is located somewhere on the host machine (see [rootfs](#rootfs)
-   chapter for more information how to do this). Set in in an environmental variable which 
-   `CMake` can use
+4. Finally install the agent for auto-start with the following steps. And set it up for 
+   auto-start.
 
    ```sh
-   export LINUX_ROOTFS="<pathToRootfs>"
+   cd org.eclipse.tcf.agent/agent
+   make install
+   sudo make install INSTALLROOT=
+   sudo update-rc.d tcf-agent defaults
    ```
 
-   Note that you can add the commands in step 2 and step 3 to the `~/.bashrc` to set the path
-   and the environment variable up permanently.
-
-4. Build the application using CMake. Run the following commands inside the repository
+5. Restart the BBB and verify the tcf-agent is running with the following command
 
    ```sh
-   mkdir build && cd build
-   cmake ..
-   cmake --build . -j
-   chmod +x hello
+   systemctl status tcf-agent
    ```
 
-5. Transfer to application to the Beaglebone Black and run it to test it
+# Using Eclipse
 
-   ```sh
-   scp hello <username>@beaglebone.local:/tmp
-   ssh <username>@beaglebone.local
-   cd /tmp
-   ./hello
-   ```
+1. Install Eclipse for C/C++ with the 
+   [installer](https://www.eclipse.org/downloads/packages/installer)
+2. Install the TCF agent plugin in Eclipse from the
+   [releases](https://www.eclipse.org/tcf/downloads.php). Go to
+   Help &rarr; Install New Software and use the download page, for
+   example https://download.eclipse.org/tools/tcf/releases/1.6/1.6.2/ to search 
+   for the plugin and install it.
+3. Eclipse project files were supplied to get started. You can copy the `.cproject` and `.project`
+   files to the system root and then add the repository as an Eclipse project to get started. 
+   Only select the root folder check box here. The build system still needs to be generated from
+   command line, but you can build and debug the project conveniently in Eclipse after that.
+4. Set the `LINUX_ROOTFS` Eclipse variable and the toolchain binary path correctly in the project
+   settings to make full use of the Eclipse indexer.
+5. If the `tcf-agent` is running on the BBB, you should be able to connect to it using
+   the TCF plugin.
+6. If you are connected, right click on the generated image in the build tree and select
+   `Debug As` &rarr; `Remote Application` to perform remote debugging
 
 # <a id="rootfs"></a> Cloning the root filesystem
 
@@ -232,70 +299,3 @@ scp <user_name>@<ip-address>:/usr/lib/arm-linux-gnueabihf/{libpthread.so,libc.so
 
 For more information on issues which can occur when cloning the root filesystem,
 see the [troubleshooting](#troubleshooting) section.
-
-# <a id="tcfagent"></a> Installing the TCF agent on the Beaglebone Black
-
-The [TCF agent](https://wiki.eclipse.org/TCF) allows comfortable
-Eclipse remote debugging and other features like a remote  file explorer in Eclipse.
-The following steps show how to setup the TCF agent on the BBB and add it to the
-auto-startup applications. The steps are based
-on [this guide](https://wiki.eclipse.org/TCF/Raspberry_Pi)
-
-1. Install required packages on the BBB
-
-   ```sh
-   sudo apt-get install git uuid uuid-dev libssl-dev
-   ```
-
-2. Clone the repository and perform some preparation steps
-   ```sh
-   git clone git://git.eclipse.org/gitroot/tcf/org.eclipse.tcf.agent.git
-   cd org.eclipse.tcf.agent.git/agent
-   ```
-
-3. Build the TCF agent
-   ```sh
-   make
-   ```
-
-   and then test it by running
-
-   ```sh
-   obj/GNU/Linux/arm/Debug/agent –S
-   ```
-
-4. Finally install the agent for auto-start with the following steps. And set it up for 
-   auto-start.
-
-   ```sh
-   cd org.eclipse.tcf.agent/agent
-   make install
-   sudo make install INSTALLROOT=
-   sudo update-rc.d tcf-agent defaults
-   ```
-
-5. Restart the BBB and verify the tcf-agent is running with the following command
-
-   ```sh
-   systemctl status tcf-agent
-   ```
-
-# Using Eclipse
-
-1. Install Eclipse for C/C++ with the 
-   [installer](https://www.eclipse.org/downloads/packages/installer)
-2. Install the TCF agent plugin in Eclipse from the
-   [releases](https://www.eclipse.org/tcf/downloads.php). Go to
-   Help &rarr; Install New Software and use the download page, for
-   example https://download.eclipse.org/tools/tcf/releases/1.6/1.6.2/ to search 
-   for the plugin and install it.
-3. Eclipse project files were supplied to get started. You can copy the `.cproject` and `.project`
-   files to the system root and then add the repository as an Eclipse project to get started. 
-   Only select the root folder check box here. The build system still needs to be generated from
-   command line, but you can build and debug the project conveniently in Eclipse after that.
-4. Set the `LINUX_ROOTFS` Eclipse variable and the toolchain binary path correctly in the project
-   settings to make full use of the Eclipse indexer.
-5. If the `tcf-agent` is running on the BBB, you should be able to connect to it using
-   the TCF plugin.
-6. If you are connected, right click on the generated image in the build tree and select
-   `Debug As` &rarr; `Remote Application` to perform remote debugging
