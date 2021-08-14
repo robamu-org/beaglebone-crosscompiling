@@ -55,7 +55,7 @@ You can also run `pacman -S mingw-w64-x86_64-toolchain` to install the full buil
    `CMake` can use
 
    ```sh
-   export BBB_ROOTFS="<pathToRootfs>"
+   export LINUX_ROOTFS="<pathToRootfs>"
    ```
 
    Note that you can add the commands in step 2 and step 3 to the `~/.bashrc` to set the path
@@ -108,7 +108,7 @@ Instructions for an Ubuntu host:
    `CMake` can use
 
    ```sh
-   export BBB_ROOTFS="<pathToRootfs>"
+   export LINUX_ROOTFS="<pathToRootfs>"
    ```
 
    Note that you can add the commands in step 2 and step 3 to the `~/.bashrc` to set the path
@@ -293,7 +293,7 @@ on [this guide](https://wiki.eclipse.org/TCF/Raspberry_Pi)
    files to the system root and then add the repository as an Eclipse project to get started. 
    Only select the root folder check box here. The build system still needs to be generated from
    command line, but you can build and debug the project conveniently in Eclipse after that.
-4. Set the `BBB_ROOTFS` Eclipse variable and the toolchain binary path correctly in the project
+4. Set the `LINUX_ROOTFS` Eclipse variable and the toolchain binary path correctly in the project
    settings to make full use of the Eclipse indexer.
 5. If the `tcf-agent` is running on the BBB, you should be able to connect to it using
    the TCF plugin.

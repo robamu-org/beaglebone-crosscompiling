@@ -8,12 +8,12 @@
 
 # CROSS_COMPILE also needs to be set accordingly or passed to the CMake command
 
-if(NOT DEFINED ENV{BBB_ROOTFS})
+if(NOT DEFINED ENV{LINUX_ROOTFS})
 	message(FATAL_ERROR 
-		"Define the BBB_ROOTFS variable to point to the Beagle Bone Black rootfs."
+		"Define the LINUX_ROOTFS variable to point to the Beagle Bone Black rootfs."
 	)
 else()
-	set(SYSROOT_PATH "$ENV{BBB_ROOTFS}")
+	set(SYSROOT_PATH "$ENV{LINUX_ROOTFS}")
 	message(STATUS "Beagle Bone Black sysroot: ${SYSROOT_PATH}")
 endif()
 
