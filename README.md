@@ -130,7 +130,7 @@ Instructions for an Ubuntu host
 # <a id="rootfs"></a> Cloning the root filesystem
 
 You can also download a basic root filesystem with `libgpiod` installed
-from [here](https://drive.google.com/drive/folders/10CfrDEREHTsbUF-FdUp1ihx1mSFhUTRM?usp=sharing).
+from [here](https://www.dropbox.com/sh/5k6kwgx3j88dv99/AABI22dRYrMdfGZyzbbIZdOQa?dl=0).
 
 ## Linux Host
 
