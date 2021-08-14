@@ -7,7 +7,7 @@ for remote debugging with Eclipse.
 
 # Prerequisites for cross-compiling
 
-1. `CMake` installed
+1. `cmake` installed
 2. ARM Linux cross compiler installed
 3. Beagle Bone Black sysroot folder mirrored on the host machine, using `rsync` and `scp`.
    See the related [chapter](#rootfs) for more information.
@@ -33,7 +33,8 @@ pacman -S mingw-w64-x86_64-cmake mingw-w64-x86_64-make rsync
 You can also run `pacman -S mingw-w64-x86_64-toolchain` to install the full build chain with
 `gcc` and `g++`
 
-1. Install the correct [ARM Linux cross-compile toolchain](https://releases.linaro.org/components/toolchain/binaries/latest-7/arm-linux-gnueabihf/)
+1. Install the correct 
+   [ARM Linux cross-compile toolchain](https://releases.linaro.org/components/toolchain/binaries/latest-7/arm-linux-gnueabihf/)
    provided by Linaro and unzip it somewhere. Copy the path to the `bin` folder.
 
 2. Navigate into the toolchain folder inside MinGW64.
@@ -80,10 +81,14 @@ You can also run `pacman -S mingw-w64-x86_64-toolchain` to install the full buil
 
 # Linux
 
-Instructions for an Ubuntu host
+The script named `bbb-env-set.sh` takes care of some of the steps specified here for convenience.
+Instructions for an Ubuntu host:
 
-1. Install the correct [ARM Linux cross-compile toolchain](https://releases.linaro.org/components/toolchain/binaries/latest-7/arm-linux-gnueabihf/)
-   provided by Linaro and unzip it somewhere. Copy the path to the `bin` folder.
+1. You can download a cross-compile toolchain built with `crosstool-ng` from 
+   [here](https://www.dropbox.com/sh/gn9bo472yalknra/AABOghC1ym1CmjL8_XZSzGdma?dl=0).
+   Alternatively, you can also  download the one provided by Linaro from
+   [here](https://releases.linaro.org/components/toolchain/binaries/latest-7/arm-linux-gnueabihf/).
+   Copy the path containin the toolchain binaries, it is going to be required later.
 
 2. Navigate into the toolchain folder.
 
