@@ -10,5 +10,9 @@ set(TARGET_NAME ${CMAKE_PROJECT_NAME})
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+find_package(Threads REQUIRED)
+
 add_executable(${TARGET_NAME})
 target_sources(${TARGET_NAME} PRIVATE hello.cpp)
+
+target_link_libraries(${TARGET_NAME} PRIVATE Threads::Threads)
