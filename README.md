@@ -19,7 +19,7 @@ for remote debugging with Eclipse.
 The script named `bbb-env-set.sh` takes care of some of the steps specified here for convenience.
 Instructions for an Ubuntu host:
 
-1. You can download a cross-compile toolchain built with `crosstool-ng` from 
+1. You can download a cross-compile toolchain built with `crosstool-ng` from
    [here](https://www.dropbox.com/sh/gn9bo472yalknra/AABOghC1ym1CmjL8_XZSzGdma?dl=0).
    Alternatively, you can also  download the one provided by Linaro from
    [here](https://releases.linaro.org/components/toolchain/binaries/latest-7/arm-linux-gnueabihf/).
@@ -39,7 +39,7 @@ Instructions for an Ubuntu host:
    ```
 
 3. It is assumed the root filesystem is located somewhere on the host machine (see [rootfs](#rootfs)
-   chapter for more information how to do this). Set in in an environmental variable which 
+   chapter for more information how to do this). Set in in an environmental variable which
    `CMake` can use
 
    ```sh
@@ -86,7 +86,7 @@ pacman -S mingw-w64-x86_64-cmake mingw-w64-x86_64-make rsync
 You can also run `pacman -S mingw-w64-x86_64-toolchain` to install the full build chain with
 `gcc` and `g++`
 
-1. Install the correct 
+1. Install the correct
    [ARM Linux cross-compile toolchain](https://releases.linaro.org/components/toolchain/binaries/latest-7/arm-linux-gnueabihf/)
    provided by Linaro and unzip it somewhere. Copy the path to the `bin` folder.
 
@@ -104,7 +104,7 @@ You can also run `pacman -S mingw-w64-x86_64-toolchain` to install the full buil
    ```
 
 3. It is assumed the root filesystem is located somewhere on the host machine (see [rootfs](#rootfs)
-   chapter for more information how to do this). Set in in an environmental variable which 
+   chapter for more information how to do this). Set in in an environmental variable which
    `CMake` can use
 
    ```sh
@@ -122,7 +122,7 @@ You can also run `pacman -S mingw-w64-x86_64-toolchain` to install the full buil
    cmake --build . -j
    chmod +x hello
    ```
- 
+
 5. Transfer to application to the Beaglebone Black and run it to test it
 
    ```sh
@@ -163,7 +163,7 @@ on [this guide](https://wiki.eclipse.org/TCF/Raspberry_Pi)
    obj/GNU/Linux/arm/Debug/agent –S
    ```
 
-4. Finally install the agent for auto-start with the following steps. And set it up for 
+4. Finally install the agent for auto-start with the following steps. And set it up for
    auto-start.
 
    ```sh
@@ -181,15 +181,15 @@ on [this guide](https://wiki.eclipse.org/TCF/Raspberry_Pi)
 
 # Using Eclipse
 
-1. Install Eclipse for C/C++ with the 
+1. Install Eclipse for C/C++ with the
    [installer](https://www.eclipse.org/downloads/packages/installer)
 2. Install the TCF agent plugin in Eclipse from the
    [releases](https://www.eclipse.org/tcf/downloads.php). Go to
    Help &rarr; Install New Software and use the download page, for
-   example https://download.eclipse.org/tools/tcf/releases/1.6/1.6.2/ to search 
+   example https://download.eclipse.org/tools/tcf/releases/1.6/1.6.2/ to search
    for the plugin and install it.
 3. Eclipse project files were supplied to get started. You can copy the `.cproject` and `.project`
-   files to the system root and then add the repository as an Eclipse project to get started. 
+   files to the system root and then add the repository as an Eclipse project to get started.
    Only select the root folder check box here. The build system still needs to be generated from
    command line, but you can build and debug the project conveniently in Eclipse after that.
 4. Set the `LINUX_ROOTFS` Eclipse variable and the toolchain binary path correctly in the project
@@ -248,10 +248,17 @@ Run the following command to create a relative symlinks instead of an absolute o
 to location might change to check it with `readlink` first before removing the symlinks:
 
 ```sh
-rm libpthread.so
-rm librt.so
-ln -s ../../../lib/arm-linux-gnueabihf/libpthread.so.0 libpthread.so
-ln -s ../../../lib/arm-linux-gnueabihf/librt.so.1 librt.so
+link_name=
+for item in `ls -l | grep ' -> /lib/arm-' | cut -b 49- | cut -d ' ' -f 1,3`; do
+   if [ -z $link_name ]; then
+      link_name=$item
+   else
+      echo $link_name $item
+      rm $link_name
+      ln -s ../../..$item $link_name
+      link_name=
+   fi
+done
 ```
 
 For more information on issues which can occur when cloning the root filesystem,
