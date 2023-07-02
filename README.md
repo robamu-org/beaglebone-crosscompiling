@@ -49,12 +49,13 @@ Instructions for an Ubuntu host:
    Note that you can add the commands in step 2 and step 3 to the `~/.bashrc` to set the path
    and the environment variable up permanently.
 
-4. Build the application using CMake. Run the following commands inside the repository
+4. Build the application using CMake. Run the following commands inside the repository, the
+   parallel count can be changed according actual CPU specification.
 
    ```sh
    mkdir build && cd build
    cmake ..
-   cmake --build . -j
+   cmake --build . --parallel 4
    chmod +x hello
    ```
 
@@ -114,12 +115,13 @@ You can also run `pacman -S mingw-w64-x86_64-toolchain` to install the full buil
    Note that you can add the commands in step 2 and step 3 to the `~/.bashrc` to set the path
    and the environment variable up permanently
 
-4. Build the application using CMake. Run the following commands inside the repository
+4. Build the application using CMake. Run the following commands inside the repository, the
+   parallel count can be changed according actual CPU specification
 
    ```sh
    mkdir build && cd build
    cmake -G "MinGW Makefiles" ..
-   cmake --build . -j
+   cmake --build . --parallel 4
    chmod +x hello
    ```
 
@@ -249,7 +251,7 @@ to location might change to check it with `readlink` first before removing the s
 
 ```sh
 link_name=
-for item in `ls -l | grep ' -> /lib/arm-' | cut -b 49- | cut -d ' ' -f 1,3`; do
+for item in `ll | grep ' -> /lib/arm-' | awk '{print $9" "$11}'`; do
    if [ -z $link_name ]; then
       link_name=$item
    else
